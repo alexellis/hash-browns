@@ -1,0 +1,13 @@
+version: "3"  
+services:  
+  prometheus:
+    image: alexellis2/prometheus-armhf:1.5.2
+    ports:
+     - 9090:9090
+    volumes:
+     - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  hashbrowns:
+    image: alexellis2/hash-browns-armhf
+    ports:
+      - 8080:8080
