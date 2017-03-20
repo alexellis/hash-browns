@@ -6,8 +6,14 @@ services:
      - 9090:9090
     volumes:
      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    deploy:
+        placement:
+            constraints: [node.role == manager]
 
   hashbrowns:
     image: alexellis2/hash-browns-armhf
     ports:
       - 8080:8080
+    deploy:
+        placement:
+            constraints: [node.role == manager]
