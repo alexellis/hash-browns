@@ -18,7 +18,13 @@ Initialize swarm-mode
 Build the image:
 
 ```
-# docker build -t alexellis2/hash-browns . -f Dockerfile.armhf
+# docker build -t alexellis2/hash-browns:0.2 . -f Dockerfile
+```
+
+Or build for ARM:
+
+```
+# docker build -t alexellis2/hash-browns:0.2-armhf . -f Dockerfile.armhf
 ```
 
 Deploy the stack with a separate compose-file:

@@ -8,6 +8,6 @@ services:
      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
 
   hashbrowns:
-    image: alexellis2/hash-browns
+    image: alexellis2/hash-browns:0.2
     ports:
       - 8080:8080
