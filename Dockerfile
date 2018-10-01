@@ -1,5 +1,5 @@
 FROM golang:1.9.6 as build
-RUN mkdir -p /go/src/github.com/alexellis/hash-browns/
+
 WORKDIR /go/src/github.com/alexellis/hash-browns/
 
 RUN go get -d -v github.com/gorilla/mux && \
