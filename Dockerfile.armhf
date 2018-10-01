@@ -1,6 +1,5 @@
 FROM alexellis2/go-armhf:1.7.4
 
-RUN mkdir -p /go/src/github.com/alexellis/hash-browns/
 WORKDIR /go/src/github.com/alexellis/hash-browns/
 
 RUN go get -d -v github.com/gorilla/mux && \
