@@ -37,20 +37,21 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 		}()
 
 		code = http.StatusBadRequest
-		if r.Method == http.MethodPost {
-			code = http.StatusOK
+		if r.Method != http.MethodPost {
 			w.WriteHeader(code)
-			body, _ := ioutil.ReadAll(r.Body)
 
-			fmt.Printf("\"%s\"\n", string(body))
-
-			hashed := computeSum(body)
-			val := fmt.Sprintf("%x\n", hashed)
-			w.Write([]byte(val))
-
-		} else {
-			w.WriteHeader(code)
+			return
 		}
+
+		code = http.StatusOK
+		w.WriteHeader(code)
+		body, _ := ioutil.ReadAll(r.Body)
+
+		fmt.Printf("\"%s\"\n", string(body))
+
+		hashed := computeSum(body)
+		val := fmt.Sprintf("%x\n", hashed)
+		w.Write([]byte(val))
 	}
 }
 
