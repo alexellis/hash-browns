@@ -29,7 +29,7 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		defer r.Body.Close()
-		code := 500
+		code := http.StatusInternalServerError
 
 		defer func() { // Make sure we record a status.
 			duration := time.Since(start)
@@ -37,7 +37,7 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 		}()
 
 		code = http.StatusBadRequest
-		if r.Method == "POST" {
+		if r.Method == http.MethodPost {
 			code = http.StatusOK
 			w.WriteHeader(code)
 			body, _ := ioutil.ReadAll(r.Body)
