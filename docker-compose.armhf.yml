@@ -11,7 +11,9 @@ services:
             constraints: [node.role == manager]
 
   hashbrowns:
-    image: alexellis2/hash-browns-armhf
+    build:
+      context: .
+      dockerfile: Dockerfile.armhf
     ports:
       - 8080:8080
     deploy:
