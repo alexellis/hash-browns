@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -21,8 +22,8 @@ func computeSum(body []byte) []byte {
 	h := sha256.New()
 
 	h.Write(body)
-	hashed := h.Sum(nil)
-	return hashed
+	hashed := hex.EncodeToString(h.Sum(nil))
+	return []byte(hashed)
 }
 
 func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
@@ -50,8 +51,7 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 		fmt.Printf("\"%s\"\n", string(body))
 
 		hashed := computeSum(body)
-		val := fmt.Sprintf("%x\n", hashed)
-		w.Write([]byte(val))
+		w.Write(hashed)
 	}
 }
 
