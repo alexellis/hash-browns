@@ -8,6 +8,8 @@ services:
      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
 
   hashbrowns:
-    image: alexellis2/hash-browns:0.2
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 8080:8080
