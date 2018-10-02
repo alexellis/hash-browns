@@ -1,14 +1,25 @@
 # Contributing to this project
 
-Please read all the instructions and agree to the DCO before submitting any patches or PRs.
+Author: Alex Ellis, 2nd October 2018
 
-## License
+### Guidelines
+
+Here are a few guidelines for contributing:
+
+* If you would like to contribute to the codebase **please raise an issue to propose the change**
+* Do not mix feature changes or fixes with refactoring - it makes the code harder to review and means there is more for the maintainers (with limited time) to test
+
+* If you have found a bug please raise an issue and fill out the whole template.
+* Don't raise PRs for typos, these aren't necessary - just raise an Issue
+* If the documentation can be improved / translated etc please raise an issue to discuss. 
+
+* Please always provide a summary of what you changed, how you did it and how it can be tested.
+
+### License
 
 This project is licensed under the MIT License.
 
-### Sign your work
-
-> Note: every commit in your PR or Patch must be signed-off.
+#### Sign your work
 
 The sign-off is a simple line at the end of the explanation for a patch. Your
 signature certifies that you wrote the patch or otherwise have the right to pass
@@ -63,10 +74,4 @@ Use your real name (sorry, no pseudonyms or anonymous contributions.)
 If you set your `user.name` and `user.email` git configs, you can sign your
 commit automatically with `git commit -s`.
 
-Please sign your commits with `git commit -s` so that commits are traceable.
-
-This is different from digital signing using GPG, GPG is not required for 
-making contributions to the project. 
-
-If you forgot to sign your work and want to fix that, see the following 
-guide: [Git: Rewriting History](https://git-scm.com/book/en/v2/Git-Tools-Rewriting-History)
+* Please sign your commits with `git commit -s` so that commits are traceable.
