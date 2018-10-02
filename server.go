@@ -2,11 +2,11 @@ package main
 
 import (
 	"crypto/sha256"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
-
-	"fmt"
 
 	"io/ioutil"
 
@@ -67,12 +67,20 @@ func main() {
 
 	prometheus.Register(histogram)
 
+	port := "8080"
+	if val, ok := os.LookupEnv("port"); ok && len(val) > 0 {
+		port = val
+	}
+
 	s := &http.Server{
-		Addr:           ":8080",
+		Addr:           fmt.Sprintf(":%s", port),
 		ReadTimeout:    8 * time.Second,
 		WriteTimeout:   8 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 		Handler:        r,
 	}
+
+	log.Printf("Listening on port: %s\n", port)
+
 	log.Fatal(s.ListenAndServe())
 }
