@@ -3,12 +3,11 @@ package main
 import (
 	"crypto/sha256"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
-	"io/ioutil"
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
