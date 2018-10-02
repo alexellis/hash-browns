@@ -37,7 +37,7 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 			histogram.WithLabelValues(fmt.Sprintf("%d", code)).Observe(duration.Seconds())
 		}()
 
-		code = http.StatusBadRequest
+		code = http.StatusMethodNotAllowed
 		if r.Method != http.MethodPost {
 			w.WriteHeader(code)
 
