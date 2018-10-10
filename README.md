@@ -18,7 +18,7 @@ Initialize swarm-mode
 Build the image:
 
 ```
-# docker build -t alexellis2/hash-browns:0.2 . -f Dockerfile
+# docker build -t alexellis2/hash-browns:0.3 . -f Dockerfile
 ```
 
 Or build for ARM:
