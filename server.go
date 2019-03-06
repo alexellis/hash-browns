@@ -65,6 +65,20 @@ func main() {
 	r.Handle("/metrics", prometheusHandler())
 	r.Handle("/hash", hashHandler(histogram))
 
+	r.HandleFunc("/", func(w http.ResponseWriter, rr *http.Request) {
+		w.Write([]byte(`<html>
+<body>
+	<h2>hash-browns</h2>
+	<p>Endpoints:</p>
+	<ul>
+		<li>GET: <a href="/metrics">/metrics</a></li>
+		<li>POST: <a href="/hash">/hash</a></li>
+	</ul>
+	<p>By Alex Ellis: <a href="https://github.com/alexellis/hash-browns">Fork/Star on GitHub</a></p>
+</body>
+</html>`))
+	})
+
 	prometheus.Register(histogram)
 
 	port := "8080"
@@ -74,8 +88,8 @@ func main() {
 
 	s := &http.Server{
 		Addr:           fmt.Sprintf(":%s", port),
-		ReadTimeout:    8 * time.Second,
-		WriteTimeout:   8 * time.Second,
+		ReadTimeout:    3 * time.Second,
+		WriteTimeout:   3 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 		Handler:        r,
 	}

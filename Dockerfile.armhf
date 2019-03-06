@@ -7,7 +7,7 @@ COPY server.go  .
 
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo --ldflags "-s -w" -o /usr/bin/server
 
-FROM alpine:3.8
+FROM alpine:3.9
 
 COPY --from=build /usr/bin/server /root/
 
