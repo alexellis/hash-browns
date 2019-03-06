@@ -7,21 +7,37 @@ This repository contains:
 
 > Read more on the related [blog post](http://blog.alexellis.io/prometheus-monitoring/)
 
-### Notes for Raspberry PI:
+### Get started
 
-Initialize swarm-mode
+Initialize Docker Swarm locally
 
 ```
 # docker swarm init
 ```
 
-Build the image:
+Build the image (optional)
 
 ```
-# docker build -t alexellis2/hash-browns:0.3 . -f Dockerfile
+# docker build -t alexellis2/hash-browns:0.4.0 . -f Dockerfile
 ```
 
-Or build for ARM:
+Deploy:
+
+```
+# docker stack deploy tutorial --compose-file=./docker-compose.yml
+```
+
+View the site:
+
+http://127.0.0.1:8080/
+
+Open Prometheus:
+
+http://127.0.0.1:9090/
+
+### Notes for Raspberry PI:
+
+Build for ARM:
 
 ```
 # docker build -t alexellis2/hash-browns:0.2-armhf . -f Dockerfile.armhf
