@@ -14,6 +14,61 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+var (
+	Version   string
+	GitCommit string
+)
+
+func main() {
+	fmt.Printf("hash-browns by Alex Ellis\nVersion: %s\tCommit: %s\n", Version, GitCommit)
+
+	histogram := prometheus.NewHistogramVec(prometheus.HistogramOpts{
+		Name: "hash_seconds",
+		Help: "Time taken to create hashes",
+	}, []string{"code"})
+
+	r := mux.NewRouter()
+	r.Handle("/metrics", prometheusHandler())
+	r.Handle("/hash", hashHandler(histogram))
+
+	r.HandleFunc("/healthz", func(w http.ResponseWriter, rr *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	r.HandleFunc("/", func(w http.ResponseWriter, rr *http.Request) {
+		w.Write([]byte(`<html>
+<body>
+	<h2>hash-browns</h2>
+	<p>Endpoints:</p>
+	<ul>
+		<li>GET: <a href="/metrics">/metrics</a></li>
+		<li>POST: <a href="/hash">/hash</a></li>
+	</ul>
+	<p>By Alex Ellis: <a href="https://github.com/alexellis/hash-browns">Fork/Star on GitHub</a></p>
+</body>
+</html>`))
+	})
+
+	prometheus.Register(histogram)
+
+	port := "8080"
+	if val, ok := os.LookupEnv("port"); ok && len(val) > 0 {
+		port = val
+	}
+
+	s := &http.Server{
+		Addr:           fmt.Sprintf(":%s", port),
+		ReadTimeout:    3 * time.Second,
+		WriteTimeout:   3 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+		Handler:        r,
+	}
+
+	log.Printf("Listening on port: %s\n", port)
+
+	log.Fatal(s.ListenAndServe())
+}
+
 func prometheusHandler() http.Handler {
 	return prometheus.Handler()
 }
@@ -53,48 +108,4 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 		hashed := computeSum(body)
 		w.Write(hashed)
 	}
-}
-
-func main() {
-	histogram := prometheus.NewHistogramVec(prometheus.HistogramOpts{
-		Name: "hash_seconds",
-		Help: "Time taken to create hashes",
-	}, []string{"code"})
-
-	r := mux.NewRouter()
-	r.Handle("/metrics", prometheusHandler())
-	r.Handle("/hash", hashHandler(histogram))
-
-	r.HandleFunc("/", func(w http.ResponseWriter, rr *http.Request) {
-		w.Write([]byte(`<html>
-<body>
-	<h2>hash-browns</h2>
-	<p>Endpoints:</p>
-	<ul>
-		<li>GET: <a href="/metrics">/metrics</a></li>
-		<li>POST: <a href="/hash">/hash</a></li>
-	</ul>
-	<p>By Alex Ellis: <a href="https://github.com/alexellis/hash-browns">Fork/Star on GitHub</a></p>
-</body>
-</html>`))
-	})
-
-	prometheus.Register(histogram)
-
-	port := "8080"
-	if val, ok := os.LookupEnv("port"); ok && len(val) > 0 {
-		port = val
-	}
-
-	s := &http.Server{
-		Addr:           fmt.Sprintf(":%s", port),
-		ReadTimeout:    3 * time.Second,
-		WriteTimeout:   3 * time.Second,
-		MaxHeaderBytes: 1 << 20,
-		Handler:        r,
-	}
-
-	log.Printf("Listening on port: %s\n", port)
-
-	log.Fatal(s.ListenAndServe())
 }

@@ -7,7 +7,7 @@ COPY server.go  .
 
 RUN CGO_ENABLED=0 go build -a -installsuffix cgo --ldflags "-s -w" -o /usr/bin/server
 
-FROM alpine:3.9
+FROM alpine:3.10
 RUN addgroup -S app && adduser -S -g app app
 
 COPY --from=build /usr/bin/server /usr/bin/server
