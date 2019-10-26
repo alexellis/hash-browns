@@ -5,16 +5,27 @@ WORKDIR /go/src/github.com/alexellis/hash-browns/
 COPY vendor     vendor
 COPY server.go  .
 
-RUN CGO_ENABLED=0 go build -a -installsuffix cgo --ldflags "-s -w" -o /usr/bin/server
+ARG GIT_COMMIT
+ARG VERSION
+ARG OPTS
 
-FROM alpine:3.10
-RUN addgroup -S app && adduser -S -g app app
+RUN test -z "$(gofmt -l $(find . -type f -name '*.go' -not -path "./vendor/*" -not -path "./function/vendor/*"))" || { echo "Run \"gofmt -s -w\" on your Golang code"; exit 1; } \
+    && CGO_ENABLED=0 go test $(go list ./... | grep -v /vendor/) -cover
 
-COPY --from=build /usr/bin/server /usr/bin/server
-RUN chown -R app /home/app
+# add user in this stage because it cannot be done in next stage which is built from scratch
+# in next stage we'll copy user and group information from this stage
+RUN env ${OPTS} CGO_ENABLED=0 go build -ldflags "-s -w -X main.GitCommit=${GIT_COMMIT} -X main.Version=${VERSION}" -a -installsuffix cgo -o /usr/bin/server \
+    && addgroup -S app \
+    && adduser -S -g app app
+
+FROM scratch
+
+COPY --from=build /etc/passwd /etc/group /etc/
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+COPY --from=build /usr/bin/server /usr/bin/
 
 USER app
-WORKDIR /home/app
+EXPOSE 80
 
-EXPOSE 8080
-CMD ["server"]
+ENTRYPOINT ["/usr/bin/server"]
+CMD ["--help"]

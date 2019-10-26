@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -20,7 +21,15 @@ var (
 )
 
 func main() {
+	var help bool
+	flag.BoolVar(&help, "help", false, "Show help")
+
 	fmt.Printf("hash-browns by Alex Ellis\nVersion: %s\tCommit: %s\n", Version, GitCommit)
+	if help {
+		fmt.Printf("See %s for more.\n", "https://github.com/alexellis/hash-browns")
+
+		os.Exit(0)
+	}
 
 	histogram := prometheus.NewHistogramVec(prometheus.HistogramOpts{
 		Name: "hash_seconds",
