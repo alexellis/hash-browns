@@ -1,5 +1,5 @@
 version: "3"  
-services:  
+services:
   prometheus:
     image: quay.io/prometheus/prometheus:latest
     ports:
