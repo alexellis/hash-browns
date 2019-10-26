@@ -1,6 +1,6 @@
 # Contributing to this project
 
-Author: Alex Ellis, 2nd October 2018
+Author: Alex Ellis, 2016-2019
 
 ### Guidelines
 
