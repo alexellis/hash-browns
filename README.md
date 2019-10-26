@@ -9,42 +9,33 @@ This repository contains:
 
 ### Get started
 
-Initialize Docker Swarm locally
+* Initialize Docker Swarm locally
 
-```
-# docker swarm init
-```
+    ```sh
+    docker swarm init
+    ```
 
-Build the image (optional)
+* Deploy:
 
-```
-# docker build -t alexellis2/hash-browns:0.4.0 . -f Dockerfile
-```
+    ```sh
+    docker stack deploy tutorial --compose-file=./docker-compose.yml
+    ```
 
-Deploy:
+* View the site:
 
-```
-# docker stack deploy tutorial --compose-file=./docker-compose.yml
-```
+    http://127.0.0.1:8080/
 
-View the site:
+* Open Prometheus:
 
-http://127.0.0.1:8080/
+    http://127.0.0.1:9090/
 
-Open Prometheus:
 
-http://127.0.0.1:9090/
+* Build the image (optional)
+
+    ```sh
+    make docker push manifest
+    ```
 
 ### Notes for Raspberry PI:
 
-Build for ARM:
-
-```
-# docker build -t alexellis2/hash-browns:0.2-armhf . -f Dockerfile.armhf
-```
-
-Deploy the stack with a separate compose-file:
-
-```
-# docker stack deploy tutorial --compose-file=./docker-compose.armhf.yml
-```
+A multi-arch Docker image is available, so you can use the same instructions.

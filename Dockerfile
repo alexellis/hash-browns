@@ -1,9 +1,9 @@
-FROM golang:1.11 as build
+FROM golang:1.11-alpine as build
 
 WORKDIR /go/src/github.com/alexellis/hash-browns/
 
 COPY vendor     vendor
-COPY server.go  .
+COPY main.go  .
 
 ARG GIT_COMMIT
 ARG VERSION
