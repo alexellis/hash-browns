@@ -1,21 +1,28 @@
-FROM golang:1.11-alpine as build
+FROM golang:1.13-alpine as build
+
+ENV GO111MODULE=on
+ENV GOFLAGS=-mod=vendor
 
 WORKDIR /go/src/github.com/alexellis/hash-browns/
 
 COPY vendor     vendor
+COPY go.sum   .
+COPY go.mod   .
 COPY main.go  .
 
 ARG GIT_COMMIT
 ARG VERSION
 ARG OPTS
 
-RUN test -z "$(gofmt -l $(find . -type f -name '*.go' -not -path "./vendor/*" -not -path "./function/vendor/*"))" || { echo "Run \"gofmt -s -w\" on your Golang code"; exit 1; } \
-    && CGO_ENABLED=0 go test $(go list ./... | grep -v /vendor/) -cover
+RUN test -z "$(gofmt -l $(find . -type f -name '*.go' -not -path "./vendor/*" -not -path "./function/vendor/*"))" || { echo "Run \"gofmt -s -w\" on your Golang code"; exit 1; }
+
+RUN CGO_ENABLED=0 go test $(go list ./... | grep -v /vendor/) -cover
 
 # add user in this stage because it cannot be done in next stage which is built from scratch
 # in next stage we'll copy user and group information from this stage
-RUN env ${OPTS} CGO_ENABLED=0 go build -ldflags "-s -w -X main.GitCommit=${GIT_COMMIT} -X main.Version=${VERSION}" -a -installsuffix cgo -o /usr/bin/server \
-    && addgroup -S app \
+RUN env ${OPTS} CGO_ENABLED=0 go build -ldflags "-s -w -X main.GitCommit=${GIT_COMMIT} -X main.Version=${VERSION}" -a -installsuffix cgo -o /usr/bin/server
+
+RUN addgroup -S app \
     && adduser -S -g app app
 
 FROM scratch

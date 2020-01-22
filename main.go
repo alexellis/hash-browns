@@ -104,17 +104,17 @@ func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 		code = http.StatusMethodNotAllowed
 		if r.Method != http.MethodPost {
 			w.WriteHeader(code)
-
+			w.Write([]byte("Method not allowed"))
 			return
 		}
 
-		code = http.StatusOK
-		w.WriteHeader(code)
+		w.WriteHeader(http.StatusOK)
 		body, _ := ioutil.ReadAll(r.Body)
 
-		fmt.Printf("\"%s\"\n", string(body))
-
 		hashed := computeSum(body)
+
+		log.Printf("Hash for: %q - %q\n", string(body), string(hashed))
+
 		w.Write(hashed)
 	}
 }
