@@ -13,6 +13,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var (
@@ -79,7 +80,7 @@ func main() {
 }
 
 func prometheusHandler() http.Handler {
-	return prometheus.Handler()
+	return promhttp.Handler()
 }
 
 func computeSum(body []byte) []byte {
