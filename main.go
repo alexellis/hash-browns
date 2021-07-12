@@ -93,28 +93,22 @@ func computeSum(body []byte) []byte {
 func hashHandler(histogram *prometheus.HistogramVec) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
-		defer r.Body.Close()
-		code := http.StatusInternalServerError
 
-		defer func() { // Make sure we record a status.
-			duration := time.Since(start)
-			histogram.WithLabelValues(fmt.Sprintf("%d", code)).Observe(duration.Seconds())
-		}()
+		code := http.StatusOK
+		if r.Method == http.MethodPost {
+			w.WriteHeader(code)
+			body, _ := ioutil.ReadAll(r.Body)
+			defer r.Body.Close()
 
-		code = http.StatusMethodNotAllowed
-		if r.Method != http.MethodPost {
+			hashed := computeSum(body)
+			log.Printf("Hash for: %q - %q\n", string(body), string(hashed))
+			w.Write(hashed)
+		} else {
+			code = http.StatusMethodNotAllowed
 			w.WriteHeader(code)
 			w.Write([]byte("Method not allowed"))
-			return
 		}
-
-		w.WriteHeader(http.StatusOK)
-		body, _ := ioutil.ReadAll(r.Body)
-
-		hashed := computeSum(body)
-
-		log.Printf("Hash for: %q - %q\n", string(body), string(hashed))
-
-		w.Write(hashed)
+		duration := time.Since(start)
+		histogram.WithLabelValues(fmt.Sprintf("%d", code)).Observe(duration.Seconds())
 	}
 }
