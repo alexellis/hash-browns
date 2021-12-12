@@ -1,7 +1,6 @@
-FROM golang:1.16-alpine as build
+FROM golang:1.17-alpine as build
 
 ENV GO111MODULE=on
-ENV GOFLAGS=-mod=vendor
 
 WORKDIR /go/src/github.com/alexellis/hash-browns/
 
@@ -31,7 +30,7 @@ COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=build /usr/bin/server /usr/bin/
 
 USER app
-EXPOSE 80
+EXPOSE 8080
 
 ENTRYPOINT ["/usr/bin/server"]
 CMD ["--help"]
