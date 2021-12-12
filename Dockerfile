@@ -5,7 +5,6 @@ ENV GOFLAGS=-mod=vendor
 
 WORKDIR /go/src/github.com/alexellis/hash-browns/
 
-COPY vendor     vendor
 COPY go.sum   .
 COPY go.mod   .
 COPY main.go  .
