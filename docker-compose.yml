@@ -11,7 +11,7 @@ services:
             constraints: [node.role == manager]
 
   hashbrowns:
-    image: alexellis2/hashbrowns:1.2.0
+    image: alexellis2/hashbrowns:v1.3.0
     ports:
       - 8080:8080
     deploy:
